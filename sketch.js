@@ -6,8 +6,8 @@ let particles = [];
 const detailType = 'dots'; // 描画タイプを「輝く点」に固定
 
 // --- Global Control Variables ---
-const globalLifespanFactor = 5.0; // ★ 持続時間を5.0倍に変更
-const globalThickness = 0.1;    // 点のサイズ基準を0.1に固定
+const globalLifespanFactor = 3.0; // ★ 持続時間を5.0倍に変更
+const globalThickness = 0.15;    // 点のサイズ基準を0.1に固定
 
 function setup() {
   createCanvas(windowWidth, windowHeight);

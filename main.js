@@ -1,28 +1,22 @@
 // main.js
 
-// ES6モジュールとしてインポートする場合
-// import { kaleidoscopeSketch } from './kaleidoscopeSketch.js';
-// import { s2 } from './sketch2.js'; // 別のスケッチも同様にインポート
-
-// ES6モジュールを使用しない場合（全てのスケッチ関数を同じファイルに記述するか、HTMLで順番に読み込む場合）
-// ここでは、仮に `kaleidoscopeSketch` がグローバルスコープにあると仮定します。
-// （例: HTMLで <script src="kaleidoscopeSketch.js"></script> を main.js の前に置く）
-
 let currentP5Instance = null;
 const sketchContainer = document.getElementById('p5-canvas-container');
 
-// スケッチのマッピング
+// ▼▼▼▼▼ 修正点：スケッチの対応表にsketch2とsketch3を追加 ▼▼▼▼▼
 const sketches = {
-    'kaleidoscope': kaleidoscopeSketch, // `kaleidoscopeSketch.js` からインポートした関数
-    // 'anotherSketch': s2 // 他のスケッチがあればここに追加
+    'kaleidoscope': kaleidoscopeSketch,
+    'sketch2': sketch2,
+    'sketch3': sketch3
 };
+// ▲▲▲▲▲ 修正点ここまで ▲▲▲▲▲
 
 function loadSketch(sketchName) {
     if (currentP5Instance) {
         currentP5Instance.remove();
         currentP5Instance = null;
     }
-    sketchContainer.innerHTML = ''; // コンテナをクリア
+    sketchContainer.innerHTML = '';
 
     const sketchFunction = sketches[sketchName];
     if (sketchFunction) {
@@ -45,6 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 初期ロードするスケッチを設定 (今回は万華鏡)
+    // 初期ロードするスケッチを設定
     loadSketch('kaleidoscope');
 });

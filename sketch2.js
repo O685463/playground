@@ -1,4 +1,4 @@
-const sketch2 = (p) => { // スケッチ全体を関数で囲み、引数 p を受け取る
+const sketch2 = (p) => {
 
   let numSegments = 10;
   let angleIncrement;
@@ -10,14 +10,14 @@ const sketch2 = (p) => { // スケッチ全体を関数で囲み、引数 p を�
   const globalLifespanFactor = 3.0;
   const globalThickness = 0.15;
 
-  p.setup = () => { // setup の前に p. を付ける
-    p.createCanvas(p.windowWidth, p.windowHeight); // p5.jsの関数は p. を付ける
+  p.setup = () => {
+    p.createCanvas(p.windowWidth, p.windowHeight);
     p.colorMode(p.HSB, 360, 100, 100, 100);
     angleIncrement = p.TWO_PI / numSegments;
     p.background(0, 0, 5);
   };
 
-  p.draw = () => { // draw の前に p. を付ける
+  p.draw = () => {
     p.background(0, 0, 5, 3);
     p.translate(p.width / 2, p.height / 2);
     currentHue = (currentHue + 1.2) % 360;
@@ -41,8 +41,9 @@ const sketch2 = (p) => { // スケッチ全体を関数で囲み、引数 p を�
       particlesToEmit = p.constrain(Math.ceil(particlesToEmit), 1, 2);
 
       for (let k = 0; k < particlesToEmit; k++) {
-        if (detailType === 'dots') { 
-          particles.push(new DotParticle(currentPoint.x, currentPoint.y, currentHue));
+        if (detailType === 'dots') {
+          // ▼▼▼ 修正点：クラスにp5インスタンス(p)を渡す ▼▼▼
+          particles.push(new DotParticle(p, currentPoint.x, currentPoint.y, currentHue));
         }
       }
     }
@@ -50,7 +51,7 @@ const sketch2 = (p) => { // スケッチ全体を関数で囲み、引数 p を�
     for (let i = 0; i < numSegments; i++) {
       p.push();
       p.rotate(i * angleIncrement);
-      for (let pt of particles) { // 変数名を p から pt に変更
+      for (let pt of particles) {
         pt.displayMirrored();
       }
       p.pop();
@@ -58,16 +59,18 @@ const sketch2 = (p) => { // スケッチ全体を関数で囲み、引数 p を�
   };
 
   class DotParticle {
-    constructor(x, y, baseHue) {
-      this.pos = p.createVector(x, y); // p. を付ける
-      this.vel = p5.Vector.random2D().mult(p.random(0.2, 0.8)); // p. を付ける
-      let baseLifespan = p.random(30, 60);
+    // ▼▼▼ 修正点：コンストラクタでp5インスタンス(pInstance)を受け取る ▼▼▼
+    constructor(pInstance, x, y, baseHue) {
+      this.p = pInstance; // pをクラス内で使えるように保持
+      this.pos = this.p.createVector(x, y); // p.ではなくthis.p.を使う
+      this.vel = this.p.constructor.Vector.random2D().mult(this.p.random(0.2, 0.8));
+      let baseLifespan = this.p.random(30, 60);
       this.lifespan = baseLifespan * globalLifespanFactor;
       this.initialLifespan = this.lifespan;
-      this.hue = (baseHue + p.random(-25, 25) + 360) % 360;
-      this.sat = p.random(70, 100);
-      this.bri = p.random(90, 100);
-      this.baseAlpha = p.random(60, 90);
+      this.hue = (baseHue + this.p.random(-25, 25) + 360) % 360;
+      this.sat = this.p.random(70, 100);
+      this.bri = this.p.random(90, 100);
+      this.baseAlpha = this.p.random(60, 90);
       
       this.size = globalThickness; 
       this.glowSizeMultiplier = 4.0; 
@@ -75,25 +78,22 @@ const sketch2 = (p) => { // スケッチ全体を関数で囲み、引数 p を�
     }
     update() { this.pos.add(this.vel); this.lifespan -= 1; }
     _actualDisplay() {
-      let currentAlpha = p.map(this.lifespan, 0, this.initialLifespan, 0, this.baseAlpha);
+      // ▼▼▼ 修正点：クラス内のp5関数はすべて this.p 経由で呼び出す ▼▼▼
+      let currentAlpha = this.p.map(this.lifespan, 0, this.initialLifespan, 0, this.baseAlpha);
       if (currentAlpha <= 0.01) return;
-      p.noStroke(); 
+      this.p.noStroke(); 
 
-      let glowRadius = p.max(this.size * this.glowSizeMultiplier, this.size + 0.8); 
+      let glowRadius = this.p.max(this.size * this.glowSizeMultiplier, this.size + 0.8); 
       let glowAlpha = currentAlpha * this.glowAlphaMultiplier;
-      p.fill(this.hue, this.sat * 0.7, p.min(this.bri * 1.1, 100), glowAlpha); 
-      p.ellipse(this.pos.x, this.pos.y, glowRadius, glowRadius);
+      this.p.fill(this.hue, this.sat * 0.7, this.p.min(this.bri * 1.1, 100), glowAlpha); 
+      this.p.ellipse(this.pos.x, this.pos.y, glowRadius, glowRadius);
 
-      p.fill(this.hue, this.sat, this.bri, currentAlpha);
-      p.ellipse(this.pos.x, this.pos.y, this.size, this.size);
+      this.p.fill(this.hue, this.sat, this.bri, currentAlpha);
+      this.p.ellipse(this.pos.x, this.pos.y, this.size, this.size);
     }
-    displayMirrored() { p.push(); this._actualDisplay(); p.scale(1, -1); this._actualDisplay(); p.pop(); }
+    displayMirrored() { this.p.push(); this._actualDisplay(); this.p.scale(1, -1); this._actualDisplay(); this.p.pop(); }
     isDead() { return this.lifespan <= 0; }
   }
-
-  // VineParticleクラスも同様に p. を付ける必要がありますが、このスケッチでは
-  // 'dots' 固定で使われていないため、今回は修正を省略します。
-  // もしVineParticleを使う場合は、kaleidoscopeSketch.jsのように修正が必要です。
 
   p.windowResized = () => {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
@@ -101,5 +101,5 @@ const sketch2 = (p) => { // スケッチ全体を関数で囲み、引数 p を�
     particles = [];
   };
 
-}; // 最後にスケッチ関数を閉じる
-// 不要な括弧は削除
+}; // スケッチ関数の終わり
+// ▼▼▼ 修正点：ファイル末尾の不要な括弧を削除 ▼▼▼

@@ -1,4 +1,3 @@
-
 let numSegments = 10;
 let angleIncrement;
 let currentHue = 0;

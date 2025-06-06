@@ -1,39 +1,31 @@
 // main.js
 
-// スケッチの定義をここにインポートするか、グローバルスコープで利用可能にする
-// 例:
-// import { s1 } from './sketch1.js'; // ES6モジュールの場合
-// import { s2 } from './sketch2.js';
-// import { s3 } from './sketch3.js'; // 必要に応じて
+// ES6モジュールとしてインポートする場合
+// import { kaleidoscopeSketch } from './kaleidoscopeSketch.js';
+// import { s2 } from './sketch2.js'; // 別のスケッチも同様にインポート
 
-// P5.jsインスタンスを保持する変数
+// ES6モジュールを使用しない場合（全てのスケッチ関数を同じファイルに記述するか、HTMLで順番に読み込む場合）
+// ここでは、仮に `kaleidoscopeSketch` がグローバルスコープにあると仮定します。
+// （例: HTMLで <script src="kaleidoscopeSketch.js"></script> を main.js の前に置く）
+
 let currentP5Instance = null;
 const sketchContainer = document.getElementById('p5-canvas-container');
 
-// スケッチのマッピング (ファイル名とP5.jsの関数)
-// 実際のプロジェクトでは、これらのスケッチ関数を別々のファイルからインポートします
+// スケッチのマッピング
 const sketches = {
-    // 例: sketch1.jsから s1 をインポートした場合
-    'sketch1': s1,
-    'sketch2': s2,
-    'sketch3': s3 // 必要に応じて
+    'kaleidoscope': kaleidoscopeSketch, // `kaleidoscopeSketch.js` からインポートした関数
+    // 'anotherSketch': s2 // 他のスケッチがあればここに追加
 };
 
-// スケッチをロードする関数
 function loadSketch(sketchName) {
-    // 既存のP5.jsインスタンスがあれば停止して削除
     if (currentP5Instance) {
-        currentP5Instance.remove(); // キャンバスとイベントリスナーをクリーンアップ
+        currentP5Instance.remove();
         currentP5Instance = null;
     }
+    sketchContainer.innerHTML = ''; // コンテナをクリア
 
-    // コンテナ内の以前のキャンバスを完全にクリア
-    sketchContainer.innerHTML = '';
-
-    // 新しいスケッチのP5.jsインスタンスを生成
     const sketchFunction = sketches[sketchName];
     if (sketchFunction) {
-        // 新しいP5.jsインスタンスを作成し、指定されたコンテナに紐付ける
         currentP5Instance = new p5(sketchFunction, sketchContainer);
         console.log(`Loaded sketch: ${sketchName}`);
     } else {
@@ -41,30 +33,18 @@ function loadSketch(sketchName) {
     }
 }
 
-// ページロード時に最初のスケッチをロード
 document.addEventListener('DOMContentLoaded', () => {
-    // ナビゲーションリンクがクリックされたときの処理を設定
     const navLinks = document.getElementById('nav-links');
     navLinks.addEventListener('click', (event) => {
-        if (event.target.tagName === 'A') { // クリックされたのがaタグなら
-            event.preventDefault(); // リンクのデフォルト動作（ページ遷移）をキャンセル
-            const sketchToLoad = event.target.dataset.sketch; // data-sketch属性からスケッチ名を取得
+        if (event.target.tagName === 'A') {
+            event.preventDefault();
+            const sketchToLoad = event.target.dataset.sketch;
             if (sketchToLoad) {
                 loadSketch(sketchToLoad);
             }
         }
     });
 
-    // 初期ロードするスケッチを設定 (例: 'sketch1')
-    loadSketch('sketch1');
+    // 初期ロードするスケッチを設定 (今回は万華鏡)
+    loadSketch('kaleidoscope');
 });
-
-// P5.jsのスケッチ関数がこのファイルから参照できるように、グローバルスコープに定義するか、
-// このファイル自体にインポート/ペーストしてください。
-// 例:
-// const s1 = (p) => { ... };
-// const s2 = (p) => { ... };
-// const s3 = (p) => { ... };
-// または、<script type="module" src="main.js"></script> でインポートする方法:
-// main.js の冒頭に import { s1 } from './sketch1.js'; などを追加し、
-// HTMLの script タグに type="module" を追加する必要があります。

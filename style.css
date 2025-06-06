@@ -1,13 +1,15 @@
+
 body {
-    margin: 0; /* bodyのデフォルトのマージンを削除 */
-    padding: 0; /* bodyのデフォルトのパディングを削除 */
-    overflow: hidden; /* スクロールバーが表示されないようにする */
+    margin: 0;           /* ブラウザのデフォルトマージンをリセット */
+    padding: 0;          /* ブラウザのデフォルトパディングをリセット */
+    overflow: hidden;    /* ページ全体のスクロールバーを非表示にする */
+    background-color: black; /* ページの背景色を黒に設定 */
 }
 
 html {
-    overflow: hidden; /* htmlのスクロールバーも表示されないようにする */
+    overflow: hidden;    /* HTML要素のスクロールバーも非表示にする (bodyのoverflowと合わせて二重対策) */
 }
 
 canvas {
-    display: block; /* canvasをブロック要素として扱い、下部のわずかな隙間をなくす */
+    display: block;      
 }

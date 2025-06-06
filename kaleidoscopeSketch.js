@@ -1,5 +1,6 @@
 // kaleidoscopeSketch.js
 
+
 // P5.jsインスタンスモードの関数としてスケッチをラップ
 const kaleidoscopeSketch = (p) => { // p を引数として受け取る
 

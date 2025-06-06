@@ -5,45 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>playground</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100&display=swap" rel="stylesheet">
+    
     <style>
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
             background-color: black;
-            color: white; /* リンクが見えるように文字色を白に */
-            font-family: sans-serif; /* 見やすいフォントを設定 */
+            color: white;
+            font-family: sans-serif;
         }
         html {
             overflow: hidden;
         }
         canvas {
             display: block;
-            /* キャンバスを中央に配置する場合の追加スタイル */
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
         }
 
-        /* ナビゲーションリンクのスタイル */
         #nav-links {
-            position: fixed; /* ページ上部に固定 */
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             padding: 10px;
-            background-color: rgba(0, 0, 0, 0.7); /* 半透明の背景 */
+            background-color: transparent; 
             text-align: center;
-            z-index: 1000; /* キャンバスより手前に表示 */
-            box-sizing: border-box; /* paddingが幅に含まれるように */
+            z-index: 1000;
+            box-sizing: border-box;
         }
         #nav-links a {
-            color: limegreen; /* リンクの色 */
-            text-decoration: none; /* 下線をなくす */
-            margin: 0 15px; /* リンク間のスペース */
-            font-size: 1.2em;
-            transition: color 0.3s ease; /* ホバー時のアニメーション */
+            color: limegreen;
+            text-decoration: none;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+            
+            /* ▼▼▼ 修正点2：フォントの種類と太さを変更 ▼▼▼ */
+            font-family: 'Noto Sans JP', sans-serif; /* さらに細いフォントに変更 */
+            font-weight: 100;                        /* 最も細いウェイトを指定 */
+            font-size: 1em;
         }
         #nav-links a:hover {
             color: white;

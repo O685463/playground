@@ -3,10 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>playground</title>
-    <link rel="stylesheet" href="style.css"> </head>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: black;
+            color: white; /* リンクが見えるように文字色を白に */
+            font-family: sans-serif; /* 見やすいフォントを設定 */
+        }
+        html {
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            /* キャンバスを中央に配置する場合の追加スタイル */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* ナビゲーションリンクのスタイル */
+        #nav-links {
+            position: fixed; /* ページ上部に固定 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.7); /* 半透明の背景 */
+            text-align: center;
+            z-index: 1000; /* キャンバスより手前に表示 */
+            box-sizing: border-box; /* paddingが幅に含まれるように */
+        }
+        #nav-links a {
+            color: limegreen; /* リンクの色 */
+            text-decoration: none; /* 下線をなくす */
+            margin: 0 15px; /* リンク間のスペース */
+            font-size: 1.2em;
+            transition: color 0.3s ease; /* ホバー時のアニメーション */
+        }
+        #nav-links a:hover {
+            color: white;
+        }
+    </style>
+</head>
 <body>
+    <div id="nav-links">
+        <a href="#" data-sketch="sketch1">スケッチ 1</a>
+        <a href="#" data-sketch="sketch2">スケッチ 2</a>
+        <a href="#" data-sketch="sketch3">スケッチ 3</a>
+    </div>
+
+    <div id="p5-canvas-container"></div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
-    <script src="sketch.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

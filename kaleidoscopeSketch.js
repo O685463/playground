@@ -4,7 +4,6 @@ const kaleidoscopeSketch = (p) => {
   let currentHue = 0;
 
   let particles = [];
-  const detailType = 'dots';
 
   const globalLifespanFactor = 3.0;
   const globalThickness = 0.15;

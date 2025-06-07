@@ -1,5 +1,4 @@
 const sketch2 = (p) => {
-
   let numSegments = 10;
   let angleIncrement;
   let currentHue = 0;
@@ -7,7 +6,7 @@ const sketch2 = (p) => {
   let particles = [];
   const detailType = 'vines';
 
-  const globalLifespanFactor = 5.0; 
+  const globalLifespanFactor = 5.0;
   const globalThickness = 0.1;
 
   p.setup = () => {
@@ -71,7 +70,7 @@ const sketch2 = (p) => {
       this.strokeW = globalThickness;
       this.currentAngle = initialAngle + this.p.random(-this.p.PI / 5, this.p.PI / 5);
       this.noiseAngleOffset = this.p.random(1000);
-      this.growthLengthBase = this.p.random(2.5, 6.0);
+      this.growthLengthBase = this.p.random(2.5, 6.0); // この行を修正
       this.glowThicknessMultiplier = 4.0;
       this.glowAlphaMultiplier = 0.20;
     }
@@ -92,38 +91,36 @@ const sketch2 = (p) => {
     }
     
     _actualDisplay() {
-      if (this.segments.length < 2) return;
-      this.p.noFill();
-      
-      this.p.beginShape();
-      for (let i = 0; i < this.segments.length; i++) {
-        let seg = this.segments[i];
-        let ageRatio = seg.age / this.segmentLifetime;
-        let segmentBaseAlpha = this.p.map(this.p.pow(1.0 - this.p.constrain(ageRatio, 0, 1), 2.0), 0, 1, 0, this.baseStrokeAlpha, true);
-        let overallFade = (this.lifespan < this.initialLifespan * 0.25) ? this.p.map(this.lifespan, 0, this.initialLifespan * 0.25, 0, 1, true) : 1.0;
+        if (this.segments.length < 2) return;
+        this.p.noFill();
         
-        // Glow
-        let currentSegGlowAlpha = segmentBaseAlpha * overallFade * this.glowAlphaMultiplier;
-        this.p.strokeWeight(this.p.max(this.strokeW * this.glowThicknessMultiplier, this.strokeW + 0.3));
-        this.p.stroke(this.hue, this.sat * 0.7, this.p.min(this.bri * 1.1, 100), currentSegGlowAlpha);
-        this.p.curveVertex(seg.pos.x, seg.pos.y);
-      }
-      this.p.endShape();
+        // Glow Layer
+        this.p.beginShape();
+        for (let seg of this.segments) {
+            let ageRatio = seg.age / this.segmentLifetime;
+            let segmentBaseAlpha = this.p.map(this.p.pow(1.0 - this.p.constrain(ageRatio, 0, 1), 2.0), 0, 1, 0, this.baseStrokeAlpha, true);
+            let overallFade = (this.lifespan < this.initialLifespan * 0.25) ? this.p.map(this.lifespan, 0, this.initialLifespan * 0.25, 0, 1, true) : 1.0;
+            let currentSegGlowAlpha = segmentBaseAlpha * overallFade * this.glowAlphaMultiplier;
+            
+            this.p.strokeWeight(this.p.max(this.strokeW * this.glowThicknessMultiplier, this.strokeW + 0.3));
+            this.p.stroke(this.hue, this.sat * 0.7, this.p.min(this.bri * 1.1, 100), currentSegGlowAlpha);
+            this.p.curveVertex(seg.pos.x, seg.pos.y);
+        }
+        this.p.endShape();
 
-      this.p.beginShape();
-      for (let i = 0; i < this.segments.length; i++) {
-         let seg = this.segments[i];
-        let ageRatio = seg.age / this.segmentLifetime;
-        let segmentBaseAlpha = this.p.map(this.p.pow(1.0 - this.p.constrain(ageRatio, 0, 1), 2.0), 0, 1, 0, this.baseStrokeAlpha, true);
-        let overallFade = (this.lifespan < this.initialLifespan * 0.25) ? this.p.map(this.lifespan, 0, this.initialLifespan * 0.25, 0, 1, true) : 1.0;
-        
-        // Main line
-        let currentSegMainAlpha = segmentBaseAlpha * overallFade;
-        this.p.strokeWeight(this.strokeW);
-        this.p.stroke(this.hue, this.sat, this.bri, currentSegMainAlpha);
-        this.p.curveVertex(seg.pos.x, seg.pos.y);
-      }
-      this.p.endShape();
+        // Main Layer
+        this.p.beginShape();
+        for (let seg of this.segments) {
+            let ageRatio = seg.age / this.segmentLifetime;
+            let segmentBaseAlpha = this.p.map(this.p.pow(1.0 - this.p.constrain(ageRatio, 0, 1), 2.0), 0, 1, 0, this.baseStrokeAlpha, true);
+            let overallFade = (this.lifespan < this.initialLifespan * 0.25) ? this.p.map(this.lifespan, 0, this.initialLifespan * 0.25, 0, 1, true) : 1.0;
+            let currentSegMainAlpha = segmentBaseAlpha * overallFade;
+
+            this.p.strokeWeight(this.strokeW);
+            this.p.stroke(this.hue, this.sat, this.bri, currentSegMainAlpha);
+            this.p.curveVertex(seg.pos.x, seg.pos.y);
+        }
+        this.p.endShape();
     }
     
     displayMirrored() {
@@ -135,8 +132,11 @@ const sketch2 = (p) => {
     }
     
     isDead() {
-      let allSegmentsPastLifetime = (this.segments.length >= this.maxSegments) && this.segments.every(seg => seg.age > this.segmentLifetime);
-      return this.lifespan <= 0 || allSegmentsPastLifetime;
+      if (this.lifespan <= 0) return true;
+      if (this.segments.length >= this.maxSegments) {
+        return this.segments.every(seg => seg.age > this.segmentLifetime);
+      }
+      return false;
     }
   }
 

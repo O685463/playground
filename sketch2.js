@@ -6,8 +6,8 @@ const sketch2 = (p) => {
   let particles = [];
   const detailType = 'vines';
 
-  const globalLifespanFactor = 5.0;
-  const globalThickness = 0.1;
+  const globalLifespanFactor = 3.0;
+  const globalThickness = 0.03;
 
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight);

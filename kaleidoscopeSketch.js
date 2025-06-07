@@ -5,8 +5,8 @@ const kaleidoscopeSketch = (p) => {
 
   let particles = [];
 
-  const globalLifespanFactor = 3.0;
-  const globalThickness = 0.15;
+  const globalLifespanFactor = 4.0;
+  const globalThickness = 0.20;
 
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight);

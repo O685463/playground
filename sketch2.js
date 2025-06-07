@@ -5,10 +5,10 @@ const sketch2 = (p) => {
   let currentHue = 0;
 
   let particles = [];
-  const detailType = 'vines'; // 描画タイプを「植物的な曲線」に切り替え
+  const detailType = 'vines';
 
-  const globalLifespanFactor = 3.0;
-  const globalThickness = 0.03;
+  const globalLifespanFactor = 5.0; 
+  const globalThickness = 0.1;
 
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight);
@@ -37,7 +37,7 @@ const sketch2 = (p) => {
       
       if (detailType === 'vines') {
         let initialAngle = p.atan2(currentPoint.y - previousPoint.y, currentPoint.x - previousPoint.x);
-        if (speed > 0.15) { // ある程度の動きがあった場合のみ生成
+        if (speed > 0.15) {
           particles.push(new VineParticle(p, currentPoint.x, currentPoint.y, currentHue, initialAngle));
         }
       }
@@ -52,39 +52,6 @@ const sketch2 = (p) => {
       p.pop();
     }
   };
-
-  // DotParticleクラスは使われませんが、エラーが出ないようにインスタンスモードに修正済みです。
-  class DotParticle {
-    constructor(pInstance, x, y, baseHue) {
-      this.p = pInstance;
-      this.pos = this.p.createVector(x, y);
-      this.vel = this.p.constructor.Vector.random2D().mult(this.p.random(0.2, 0.8));
-      let baseLifespan = this.p.random(30, 60);
-      this.lifespan = baseLifespan * globalLifespanFactor;
-      this.initialLifespan = this.lifespan;
-      this.hue = (baseHue + this.p.random(-25, 25) + 360) % 360;
-      this.sat = this.p.random(70, 100);
-      this.bri = this.p.random(90, 100);
-      this.baseAlpha = this.p.random(60, 90);
-      this.size = globalThickness;
-      this.glowSizeMultiplier = 4.0;
-      this.glowAlphaMultiplier = 0.30;
-    }
-    update() { this.pos.add(this.vel); this.lifespan -= 1; }
-    _actualDisplay() {
-      let currentAlpha = this.p.map(this.lifespan, 0, this.initialLifespan, 0, this.baseAlpha);
-      if (currentAlpha <= 0.01) return;
-      this.p.noStroke();
-      let glowRadius = this.p.max(this.size * this.glowSizeMultiplier, this.size + 0.8);
-      let glowAlpha = currentAlpha * this.glowAlphaMultiplier;
-      this.p.fill(this.hue, this.sat * 0.7, this.p.min(this.bri * 1.1, 100), glowAlpha);
-      this.p.ellipse(this.pos.x, this.pos.y, glowRadius, glowRadius);
-      this.p.fill(this.hue, this.sat, this.bri, currentAlpha);
-      this.p.ellipse(this.pos.x, this.pos.y, this.size, this.size);
-    }
-    displayMirrored() { this.p.push(); this._actualDisplay(); this.p.scale(1, -1); this._actualDisplay(); this.p.pop(); }
-    isDead() { return this.lifespan <= 0; }
-  }
 
   class VineParticle {
     constructor(pInstance, x, y, baseHue, initialAngle) {
@@ -104,4 +71,78 @@ const sketch2 = (p) => {
       this.strokeW = globalThickness;
       this.currentAngle = initialAngle + this.p.random(-this.p.PI / 5, this.p.PI / 5);
       this.noiseAngleOffset = this.p.random(1000);
-      this.growthLengthBase = this.p.random(2.5,
+      this.growthLengthBase = this.p.random(2.5, 6.0);
+      this.glowThicknessMultiplier = 4.0;
+      this.glowAlphaMultiplier = 0.20;
+    }
+
+    update() {
+      this.lifespan -= 1;
+      this.framesSinceGrowth++;
+      if (this.segments.length < this.maxSegments && this.framesSinceGrowth >= this.growthInterval) {
+        let lastSegment = this.segments[this.segments.length - 1];
+        let angleChange = this.p.map(this.p.noise(this.noiseAngleOffset + this.p.frameCount * 0.035), 0, 1, -this.p.PI / 3.5, this.p.PI / 3.5);
+        this.currentAngle += angleChange;
+        let growthLength = this.growthLengthBase * (0.8 + this.p.noise(this.noiseAngleOffset + this.p.frameCount * 0.05 + 100) * 0.4);
+        let newPos = this.p.constructor.Vector.fromAngle(this.currentAngle).mult(growthLength).add(lastSegment.pos);
+        this.segments.push({ pos: newPos, age: 0 });
+        this.framesSinceGrowth = 0;
+      }
+      for (let seg of this.segments) { seg.age++; }
+    }
+    
+    _actualDisplay() {
+      if (this.segments.length < 2) return;
+      this.p.noFill();
+      
+      this.p.beginShape();
+      for (let i = 0; i < this.segments.length; i++) {
+        let seg = this.segments[i];
+        let ageRatio = seg.age / this.segmentLifetime;
+        let segmentBaseAlpha = this.p.map(this.p.pow(1.0 - this.p.constrain(ageRatio, 0, 1), 2.0), 0, 1, 0, this.baseStrokeAlpha, true);
+        let overallFade = (this.lifespan < this.initialLifespan * 0.25) ? this.p.map(this.lifespan, 0, this.initialLifespan * 0.25, 0, 1, true) : 1.0;
+        
+        // Glow
+        let currentSegGlowAlpha = segmentBaseAlpha * overallFade * this.glowAlphaMultiplier;
+        this.p.strokeWeight(this.p.max(this.strokeW * this.glowThicknessMultiplier, this.strokeW + 0.3));
+        this.p.stroke(this.hue, this.sat * 0.7, this.p.min(this.bri * 1.1, 100), currentSegGlowAlpha);
+        this.p.curveVertex(seg.pos.x, seg.pos.y);
+      }
+      this.p.endShape();
+
+      this.p.beginShape();
+      for (let i = 0; i < this.segments.length; i++) {
+         let seg = this.segments[i];
+        let ageRatio = seg.age / this.segmentLifetime;
+        let segmentBaseAlpha = this.p.map(this.p.pow(1.0 - this.p.constrain(ageRatio, 0, 1), 2.0), 0, 1, 0, this.baseStrokeAlpha, true);
+        let overallFade = (this.lifespan < this.initialLifespan * 0.25) ? this.p.map(this.lifespan, 0, this.initialLifespan * 0.25, 0, 1, true) : 1.0;
+        
+        // Main line
+        let currentSegMainAlpha = segmentBaseAlpha * overallFade;
+        this.p.strokeWeight(this.strokeW);
+        this.p.stroke(this.hue, this.sat, this.bri, currentSegMainAlpha);
+        this.p.curveVertex(seg.pos.x, seg.pos.y);
+      }
+      this.p.endShape();
+    }
+    
+    displayMirrored() {
+      this.p.push();
+      this._actualDisplay();
+      this.p.scale(1, -1);
+      this._actualDisplay();
+      this.p.pop();
+    }
+    
+    isDead() {
+      let allSegmentsPastLifetime = (this.segments.length >= this.maxSegments) && this.segments.every(seg => seg.age > this.segmentLifetime);
+      return this.lifespan <= 0 || allSegmentsPastLifetime;
+    }
+  }
+
+  p.windowResized = () => {
+    p.resizeCanvas(p.windowWidth, p.windowHeight);
+    p.background(0, 0, 5);
+    particles = [];
+  };
+};

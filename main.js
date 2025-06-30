@@ -1,22 +1,34 @@
-let currentP5Instance = null;
-const sketchContainer = document.getElementById('p5-canvas-container');
+let currentSketchInstance = null;
+const sketchContainer = document.getElementById('sketch-container');
 
 const sketches = {
-    'kaleidoscope': kaleidoscopeSketch,
-    'sketch2': sketch2,
-    'sketch3': sketch3
+    'kaleidoscope': { type: 'p5', sketch: kaleidoscopeSketch },
+    'sketch2': { type: 'p5', sketch: sketch2 },
+    'sketch3': { type: 'p5', sketch: sketch3 },
+    'cube': { type: 'three', sketch: threeCube }
 };
 
 function loadSketch(sketchName) {
-    if (currentP5Instance) {
-        currentP5Instance.remove();
-        currentP5Instance = null;
+    // Cleanup previous sketch
+    if (currentSketchInstance) {
+        if (currentSketchInstance.destroy) {
+            // For three.js or custom objects with a destroy method
+            currentSketchInstance.destroy();
+        } else if (currentSketchInstance.remove) {
+            // For p5.js instances
+            currentSketchInstance.remove();
+        }
+        currentSketchInstance = null;
     }
     sketchContainer.innerHTML = '';
 
-    const sketchFunction = sketches[sketchName];
-    if (sketchFunction) {
-        currentP5Instance = new p5(sketchFunction, sketchContainer);
+    const sketchInfo = sketches[sketchName];
+    if (sketchInfo) {
+        if (sketchInfo.type === 'p5') {
+            currentSketchInstance = new p5(sketchInfo.sketch, sketchContainer);
+        } else if (sketchInfo.type === 'three') {
+            currentSketchInstance = sketchInfo.sketch(sketchContainer);
+        }
     } else {
         console.error(`Sketch not found: ${sketchName}`);
     }
@@ -34,5 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Load the default sketch
     loadSketch('kaleidoscope');
 });

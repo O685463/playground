@@ -10,6 +10,16 @@ html {
     overflow: hidden;    /* HTML要素のスクロールバーも非表示にする (bodyのoverflowと合わせて二重対策) */
 }
 
-canvas {
-    display: block;      
+#sketch-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#sketch-container canvas {
+    display: block;
 }

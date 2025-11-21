@@ -16,37 +16,6 @@
         </div>
     </div>
     </div>
-    <div class="actions">
-        <button id="resetBtn" class="btn-secondary">Start Over</button>
-        <a id="downloadBtn" class="btn-primary" href="#" download="removed-bg.png">Download</a>
-    </div>
-    </div>
-
-    <!-- Debug Console -->
-    <div class="debug-console">
-        <div class="debug-header">
-            <span>Debug Log</span>
-            <!DOCTYPE html>
-            <html lang="en">
-
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>AI Background Remover (Debug Mode)</title>
-                <h4>Original</h4>
-                <img id="originalImg" alt="Original">
-        </div>
-        <div>
-            <h4>Result</h4>
-            <div class="img-wrapper">
-                <img id="processedImg" alt="Processed">
-                <div id="loadingSpinner" class="spinner" style="display: none;"></div>
-            </div>
-        </div>
-    </div>
-    <div class="actions">
-        <button id="resetBtn" class="btn-secondary">Start Over</button>
-        <a id="downloadBtn" class="btn-primary" href="#" download="removed-bg.png">Download</a>
     </div>
     </div>
 
@@ -59,6 +28,35 @@
         <div id="debugLog" class="debug-content"></div>
     </div>
     </main>
+
+    <!-- Emergency Debug Logger (Inline & Non-Module) -->
+    <script>
+        // Global Logger
+        window.log = function (msg, type = 'info') {
+            const debugLog = document.getElementById('debugLog');
+            if (debugLog) {
+                const entry = document.createElement('div');
+                entry.className = 'log-entry log-' + type;
+                const time = new Date().toLocaleTimeString();
+                entry.textContent = '[' + time + '] ' + msg;
+                debugLog.appendChild(entry);
+                debugLog.scrollTop = debugLog.scrollHeight;
+            }
+            console.log('[' + type.toUpperCase() + '] ' + msg);
+        };
+
+        // Global Error Handler
+        window.onerror = function (msg, url, line, col, error) {
+            window.log('Global Error: ' + msg + ' (' + url + ':' + line + ')', 'error');
+            return false;
+        };
+
+        window.addEventListener('unhandledrejection', function (e) {
+            window.log('Unhandled Promise Rejection: ' + e.reason, 'error');
+        });
+
+        window.log('System initialized. Waiting for modules...');
+    </script>
 
     <script type="module" src="script.js?v=2.1"></script>
     </body>

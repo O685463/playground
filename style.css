@@ -170,6 +170,27 @@ h1 {
     transition: all 0.3s ease;
 }
 
+.tool-card:hover:not(.coming-soon) .tool-icon {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+.icon-bg-remover {
+    color: var(--primary-color);
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.icon-pdf-merger {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.tool-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
 .tool-card p {
     color: var(--text-muted);
     font-size: 0.95rem;

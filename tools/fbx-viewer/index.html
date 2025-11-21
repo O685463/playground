@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FBX Model Viewer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="background-gradient"></div>
+    <div class="glass-overlay"></div>
+
+    <a href="../../index.html" class="back-link">← Back to Tools</a>
+
+    <main class="app-container">
+        <header class="app-header">
+            <h1>FBX Model Viewer <span class="version-tag">v1.0</span></h1>
+            <p class="subtitle">Upload and view 3D FBX models with animations</p>
+        </header>
+
+        <!-- Upload Area -->
+        <div id="dropZone" class="upload-area">
+            <div class="content">
+                <div class="icon">📦</div>
+                <h3>Upload FBX Model</h3>
+                <p>Drag & Drop or Click</p>
+                <input type="file" id="fileInput" accept=".fbx" hidden>
+            </div>
+        </div>
+
+        <!-- 3D Viewer Area -->
+        <div id="viewerArea" class="viewer-area" style="display: none;">
+            <div id="canvas-container">
+                <canvas id="renderCanvas"></canvas>
+            </div>
+            <div class="controls">
+                <button id="resetViewBtn" class="btn-secondary">Reset View</button>
+                <button id="changeModelBtn" class="btn-secondary">Change Model</button>
+                <div id="animationControls" style="display: none;">
+                    <button id="playBtn" class="btn-primary">Play Animation</button>
+                    <button id="pauseBtn" class="btn-primary" style="display:none;">Pause</button>
+                </div>
+            </div>
+            <div id="modelInfo" class="model-info"></div>
+        </div>
+    </main>
+
+    <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"></script>
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>

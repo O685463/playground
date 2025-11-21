@@ -1,23 +1,14 @@
-// Debug Logger
-function log(msg, type = 'info') {
-    const debugLog = document.getElementById('debugLog');
-    if (!debugLog) return;
+// Use global logger
+const log = window.log || console.log;
 
-    const entry = document.createElement('div');
-    entry.className = `log-entry log-${type}`;
-    const time = new Date().toLocaleTimeString();
-    entry.textContent = `[${time}] ${msg}`;
-    debugLog.appendChild(entry);
-    debugLog.scrollTop = debugLog.scrollHeight;
-    console.log(`[${type.toUpperCase()}] ${msg}`);
-}
-
-log('Script initialized. Waiting for DOM...');
+log('Module script started. Attempting to import library...');
 
 import { removeBackground } from "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.0.5/dist/browser/index.min.js";
 
+log('Library imported successfully.');
+
 document.addEventListener('DOMContentLoaded', () => {
-    log('DOM Content Loaded.');
+    log('DOM Content Loaded (Module).');
 
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
@@ -128,8 +119,4 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingSpinner.style.display = 'none';
         }
     }
-});
-
-window.addEventListener('error', (e) => {
-    log(`Global Error: ${e.message}`, 'error');
 });

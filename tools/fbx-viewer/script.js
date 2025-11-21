@@ -1,6 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+import * as fflate from 'https://cdn.jsdelivr.net/npm/fflate@0.8.1/esm/browser.js';
+
+// Make fflate available globally for FBXLoader
+window.fflate = fflate;
+
 
 // Global variables
 let scene, camera, renderer, controls, mixer, clock;

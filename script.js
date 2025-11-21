@@ -42,8 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function handleFile(file) {
-        if (!file.type.startsWith('image/')) {
-            alert('Please upload an image file.');
+        const validTypes = ['image/png', 'image/jpeg', 'image/webp'];
+        if (!validTypes.includes(file.type)) {
+            alert('Please upload a PNG, JPG, or WEBP image.');
             return;
         }
 
@@ -51,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dropZone.style.display = 'none';
         resultSection.style.display = 'block';
         loadingState.style.display = 'flex'; // Show loading
-        
+
         // Display original image
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -62,17 +63,19 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             // Check if imgly is loaded
             if (typeof imglyRemoveBackground === 'undefined') {
-                throw new Error('Library not loaded yet. Please check your internet connection.');
+                throw new Error('Background removal library is not loaded. Please check your internet connection or ad blocker.');
             }
+
+            console.log('Starting background removal for:', file.name);
 
             // Process image
             // Note: imglyRemoveBackground is exposed by the CDN script
             const blob = await imglyRemoveBackground(file);
-            
+
             // Create URL for result
             const url = URL.createObjectURL(blob);
             processedImg.src = url;
-            
+
             // Setup download
             downloadBtn.href = url;
             downloadBtn.download = `removed-bg-${file.name.split('.')[0]}.png`;
@@ -82,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error removing background:', error);
-            alert('Failed to remove background. See console for details.');
+            alert(`Failed to remove background: ${error.message}`);
             // Reset UI on error
             resultSection.style.display = 'none';
             dropZone.style.display = 'block';

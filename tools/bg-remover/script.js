@@ -80,43 +80,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Show UI
-        dropZone.style.display = 'none';
-        resultArea.style.display = 'block';
-        loadingSpinner.style.display = 'block';
+        const url = URL.createObjectURL(blob);
+        processedImg.src = url;
+        downloadBtn.href = url;
+        downloadBtn.download = `removed-${file.name.split('.')[0]}.png`;
 
-        // Show Original
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            originalImg.src = e.target.result;
-            log('Original image loaded into view.');
-        };
-        reader.readAsDataURL(file);
+        loadingSpinner.style.display = 'none';
+        log('Process complete. Result displayed.');
 
-        try {
-            log('Calling removeBackground...');
-            const config = {
-                publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.0.5/dist/",
-                progress: (key, current, total) => {
-                    log(`Progress: ${key} ${Math.round(current / total * 100)}%`);
-                }
-            };
-
-            const blob = await removeBackground(file, config);
-            log('Background removed successfully.');
-
-            const url = URL.createObjectURL(blob);
-            processedImg.src = url;
-            downloadBtn.href = url;
-            downloadBtn.download = `removed-${file.name.split('.')[0]}.png`;
-
-            loadingSpinner.style.display = 'none';
-            log('Process complete. Result displayed.');
-
-        } catch (error) {
-            log(`Error: ${error.message}`, 'error');
-            console.error(error);
-            alert('Failed to process image. Check debug log.');
-            loadingSpinner.style.display = 'none';
-        }
+    } catch (error) {
+        log(`Error: ${error.message}`, 'error');
+        console.error(error);
+        alert('Failed to process image. Check debug log.');
+        loadingSpinner.style.display = 'none';
     }
+}
 });

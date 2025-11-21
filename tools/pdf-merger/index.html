@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Merger & Converter</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="background-gradient"></div>
+    <div class="glass-overlay"></div>
+
+    <a href="../../index.html" class="back-link">← Back to Tools</a>
+
+    <main class="app-container">
+        <header class="app-header">
+            <h1>PDF Merger <span class="version-tag">v1.0</span></h1>
+            <p class="subtitle">Merge PDFs or convert sequential images into a single PDF.</p>
+        </header>
+
+        <!-- Upload Area -->
+        <div id="dropZone" class="upload-area">
+            <div class="content">
+                <div class="icon">📄</div>
+                <h3>Upload Files</h3>
+                <p>Drag & Drop PDFs or Images (PNG/JPG)</p>
+                <input type="file" id="fileInput" accept=".pdf, .png, .jpg, .jpeg" multiple hidden>
+            </div>
+        </div>
+
+        <!-- File List -->
+        <div id="fileListContainer" class="file-list-container">
+            <div class="file-list-header">
+                <h4>Files to Merge</h4>
+                <span id="fileCount" class="file-count">0 files</span>
+            </div>
+            <ul id="fileList" class="file-list">
+                <!-- File items will be added here -->
+            </ul>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <button id="clearBtn" class="btn-secondary" style="display: none;">Clear All</button>
+            <button id="mergeBtn" class="btn-primary" disabled>
+                <span class="btn-text">Merge Files</span>
+                <div class="spinner" id="loadingSpinner"></div>
+            </button>
+        </div>
+    </main>
+
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>

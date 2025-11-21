@@ -1,7 +1,8 @@
 import { removeBackground } from "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.0.5/dist/browser/index.min.js";
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('BG Remover App v1.2 Loaded');
+    // alert('App Loaded v1.3'); // Uncomment for debugging if needed
+    console.log('BG Remover App v1.3 Loaded');
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const resultSection = document.getElementById('resultSection');

@@ -9,6 +9,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script>
+        window.addEventListener('error', function (e) {
+            alert('System Error: ' + e.message);
+        });
+        window.addEventListener('unhandledrejection', function (e) {
+            alert('System Error (Promise): ' + e.reason);
+        });
+    </script>
     <style>
         .back-link {
             position: absolute;
@@ -110,10 +118,10 @@
     </main>
 
     <footer>
-        <p>Created with <span style="color: #ff4757;">&hearts;</span> by Antigravity | v1.2</p>
+        <p>Created with <span style="color: #ff4757;">&hearts;</span> by Antigravity | v1.3</p>
     </footer>
 
-    <script type="module" src="script.js?v=1.2"></script>
+    <script type="module" src="script.js?v=1.3"></script>
 </body>
 
 </html>

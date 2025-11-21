@@ -3,7 +3,7 @@ const log = window.log || console.log;
 
 log('Module script started. Attempting to import library...');
 
-import { removeBackground } from "https://unpkg.com/@imgly/background-removal@1.0.5/dist/browser/index.min.js";
+import { removeBackground } from "https://esm.sh/@imgly/background-removal@1.4.5";
 
 log('Library imported successfully.');
 
@@ -95,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             log('Calling removeBackground...');
             const config = {
-                publicPath: "https://unpkg.com/@imgly/background-removal@1.0.5/dist/",
                 progress: (key, current, total) => {
                     log(`Progress: ${key} ${Math.round(current / total * 100)}%`);
                 }

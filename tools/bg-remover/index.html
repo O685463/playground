@@ -5,28 +5,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Background Remover (Debug Mode)</title>
-    <h4>Original</h4>
-    <img id="originalImg" alt="Original">
-    </div>
-    <div>
-        <h4>Result</h4>
-        <div class="img-wrapper">
-            <img id="processedImg" alt="Processed">
-            <div id="loadingSpinner" class="spinner" style="display: none;"></div>
-        </div>
-    </div>
-    </div>
-    </div>
-    </div>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
 
-    <!-- Debug Console -->
-    <div class="debug-console">
-        <div class="debug-header">
-            <span>Debug Log</span>
-            <button onclick="document.getElementById('debugLog').innerHTML = ''">Clear</button>
+<body>
+    <div class="background-gradient"></div>
+    <div class="glass-overlay"></div>
+
+    <a href="../../index.html" class="back-link">← Back to Tools</a>
+
+    <main class="app-container">
+        <header class="app-header">
+            <h1>Background Remover <span class="version-tag">v2.2</span></h1>
+            <p class="subtitle">Drag & Drop an image to remove its background.</p>
+        </header>
+
+        <!-- Upload Area -->
+        <div id="dropZone" class="upload-area">
+            <div class="content">
+                <div class="icon">📁</div>
+                <h3>Upload Image</h3>
+                <p>Drag & Drop or Click</p>
+                <input type="file" id="fileInput" accept="image/png, image/jpeg, image/webp" hidden>
+            </div>
         </div>
-        <div id="debugLog" class="debug-content"></div>
-    </div>
+
+        <!-- Result Area -->
+        <div id="resultArea" class="result-area" style="display: none;">
+            <div class="image-container">
+                <div>
+                    <h4>Original</h4>
+                    <img id="originalImg" alt="Original">
+                </div>
+                <div>
+                    <h4>Result</h4>
+                    <div class="img-wrapper">
+                        <img id="processedImg" alt="Processed">
+                        <div id="loadingSpinner" class="spinner" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <button id="resetBtn" class="btn-secondary">Start Over</button>
+                <a id="downloadBtn" class="btn-primary" href="#" download="removed-bg.png">Download</a>
+            </div>
+        </div>
+
+        <!-- Debug Console -->
+        <div class="debug-console">
+            <div class="debug-header">
+                <span>Debug Log</span>
+                <button onclick="document.getElementById('debugLog').innerHTML = ''">Clear</button>
+            </div>
+            <div id="debugLog" class="debug-content"></div>
+        </div>
     </main>
 
     <!-- Emergency Debug Logger (Inline & Non-Module) -->
@@ -58,7 +93,7 @@
         window.log('System initialized. Waiting for modules...');
     </script>
 
-    <script type="module" src="script.js?v=2.1"></script>
-    </body>
+    <script type="module" src="script.js?v=2.2"></script>
+</body>
 
 </html>

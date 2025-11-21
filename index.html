@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Background Remover | Premium Tool</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Load @imgly/background-removal from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.0.5/dist/browser/index.min.js"></script>
+</head>
+<body>
+    <div class="background-gradient"></div>
+    <div class="glass-overlay"></div>
+
+    <main class="app-container">
+        <header class="app-header">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                <span>BG Remover</span>
+            </div>
+            <h1>Remove Backgrounds <br><span class="text-gradient">Instantly & Free</span></h1>
+            <p class="subtitle">Powered by AI, running 100% in your browser. No data leaves your device.</p>
+        </header>
+
+        <section class="upload-section" id="dropZone">
+            <input type="file" id="fileInput" accept="image/*" hidden>
+            <div class="upload-card">
+                <div class="icon-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>
+                </div>
+                <h3>Upload an Image</h3>
+                <p>Drag & drop or click to browse</p>
+                <button class="btn-primary" onclick="document.getElementById('fileInput').click()">Choose File</button>
+            </div>
+        </section>
+
+        <section class="result-section" id="resultSection" style="display: none;">
+            <div class="comparison-container">
+                <div class="image-card original">
+                    <div class="card-header">Original</div>
+                    <img id="originalImg" src="" alt="Original">
+                </div>
+                <div class="image-card processed">
+                    <div class="card-header">Result</div>
+                    <div class="img-wrapper">
+                        <img id="processedImg" src="" alt="Processed">
+                        <div class="loading-overlay" id="loadingState">
+                            <div class="spinner"></div>
+                            <span>Processing...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn-secondary" id="resetBtn">Start Over</button>
+                <a id="downloadBtn" class="btn-primary download" href="#" download="removed-bg.png">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Download HD
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Created with <span style="color: #ff4757;">&hearts;</span> by Antigravity</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

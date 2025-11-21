@@ -1,15 +1,6 @@
-// Use global logger
-const log = window.log || console.log;
-
-log('Module script started. Attempting to import library...');
-
 import { removeBackground } from "https://esm.sh/@imgly/background-removal@1.4.5";
 
-log('Library imported successfully.');
-
 document.addEventListener('DOMContentLoaded', () => {
-    log('DOM Content Loaded (Module).');
-
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const resultArea = document.getElementById('resultArea');
@@ -19,20 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadBtn = document.getElementById('downloadBtn');
     const resetBtn = document.getElementById('resetBtn');
 
-    if (!dropZone || !fileInput) {
-        log('CRITICAL: Required elements not found!', 'error');
-        return;
-    }
+    if (!dropZone || !fileInput) return;
 
     // Click to upload
     dropZone.addEventListener('click', () => {
-        log('DropZone clicked. Opening file dialog...');
         fileInput.click();
     });
 
     // File Input Change
     fileInput.addEventListener('change', (e) => {
-        log(`File input changed. Files: ${e.target.files.length}`);
         if (e.target.files.length > 0) {
             processFile(e.target.files[0]);
         }
@@ -52,70 +38,81 @@ document.addEventListener('DOMContentLoaded', () => {
     dropZone.addEventListener('drop', (e) => {
         e.preventDefault();
         dropZone.classList.remove('drag-over');
-        log('File dropped.');
 
         if (e.dataTransfer.files.length > 0) {
-            log(`Processing dropped file: ${e.dataTransfer.files[0].name}`);
             processFile(e.dataTransfer.files[0]);
-        } else {
-            log('No files found in drop event.', 'error');
         }
     });
 
     // Reset
     resetBtn.addEventListener('click', () => {
-        log('Resetting UI.');
         resultArea.style.display = 'none';
-        dropZone.style.display = 'block';
+        dropZone.style.display = 'block'; // Restore block display
+        dropZone.style.opacity = '1';
+        dropZone.style.pointerEvents = 'auto';
         fileInput.value = '';
+        originalImg.src = '';
+        processedImg.src = '';
+        // Hide images again to prevent broken icon
+        originalImg.style.display = 'none';
+        processedImg.style.display = 'none';
     });
 
     async function processFile(file) {
-        log(`Starting process for: ${file.name} (${file.type})`);
-
         if (!file.type.startsWith('image/')) {
-            log('Invalid file type. Must be an image.', 'error');
             alert('Please upload an image file.');
             return;
         }
 
-        // Show UI
-        dropZone.style.display = 'none';
-        resultArea.style.display = 'block';
+        // Transition UI
+        dropZone.style.opacity = '0';
+        dropZone.style.pointerEvents = 'none';
+
+        setTimeout(() => {
+            dropZone.style.display = 'none';
+            resultArea.style.display = 'block';
+            // Fade in result area
+            resultArea.style.opacity = '0';
+            requestAnimationFrame(() => {
+                resultArea.style.opacity = '1';
+            });
+        }, 300);
+
         loadingSpinner.style.display = 'block';
 
         // Show Original
         const reader = new FileReader();
         reader.onload = (e) => {
             originalImg.src = e.target.result;
-            log('Original image loaded into view.');
+            originalImg.style.display = 'block'; // Show only when loaded
         };
         reader.readAsDataURL(file);
 
         try {
-            log('Calling removeBackground...');
             const config = {
                 progress: (key, current, total) => {
-                    log(`Progress: ${key} ${Math.round(current / total * 100)}%`);
+                    // Optional: Update a progress bar if we had one
                 }
             };
 
             const blob = await removeBackground(file, config);
-            log('Background removed successfully.');
-
             const url = URL.createObjectURL(blob);
+
             processedImg.src = url;
+            processedImg.onload = () => {
+                processedImg.style.display = 'block'; // Show only when loaded
+                loadingSpinner.style.display = 'none';
+            };
+
             downloadBtn.href = url;
             downloadBtn.download = `removed-${file.name.split('.')[0]}.png`;
 
-            loadingSpinner.style.display = 'none';
-            log('Process complete. Result displayed.');
-
         } catch (error) {
-            log(`Error: ${error.message}`, 'error');
             console.error(error);
-            alert('Failed to process image. Check debug log.');
+            alert('Failed to process image.');
             loadingSpinner.style.display = 'none';
+            // Revert UI on error
+            resetBtn.click();
         }
     }
 });

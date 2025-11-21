@@ -1,3 +1,5 @@
+import { removeBackground } from "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.0.5/dist/browser/index.min.js";
+
 document.addEventListener('DOMContentLoaded', () => {
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
@@ -61,16 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsDataURL(file);
 
         try {
-            // Check if imgly is loaded
-            if (typeof imglyRemoveBackground === 'undefined') {
-                throw new Error('Background removal library is not loaded. Please check your internet connection or ad blocker.');
-            }
-
             console.log('Starting background removal for:', file.name);
 
             // Process image
-            // Note: imglyRemoveBackground is exposed by the CDN script
-            const blob = await imglyRemoveBackground(file);
+            const blob = await removeBackground(file);
 
             // Create URL for result
             const url = URL.createObjectURL(blob);

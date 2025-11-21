@@ -67,7 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Starting background removal for:', file.name);
 
             // Process image
-            const blob = await removeBackground(file);
+            const config = {
+                publicPath: "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.0.5/dist/"
+            };
+            const blob = await removeBackground(file, config);
 
             // Create URL for result
             const url = URL.createObjectURL(blob);
